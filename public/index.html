@@ -23,6 +23,9 @@
                 <label>
                     <input type="radio" name="quiz-mode" value="all"> Все вопросы
                 </label>
+                <label>
+                    <input type="radio" name="quiz-mode" value="simulation"> Имитация теста (50 вопросов из разных разделов)
+                </label>
             </div>
             <button id="start-quiz-btn">Начать тест</button>
         </div>
@@ -30,6 +33,7 @@
         <!-- Экран викторины -->
         <div id="quiz-screen" class="screen hidden">
             <h2 id="quiz-header">Вопрос <span id="current-question-number">1</span> из <span id="total-questions">X</span></h2>
+            <p id="section-name" class="section-display"></p>
             <div class="question-container">
                 <p id="question-text"></p>
                 <div id="options-container" class="options-grid">

@@ -6,9 +6,9 @@ body {
     color: #333;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Изменено на flex-start, чтобы контент не центрировался по вертикали, если он короткий */
-    min-height: 100vh; /* Убедимся, что тело занимает всю высоту окна */
-    padding-top: 50px; /* Немного отступ сверху */
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 50px;
 }
 
 .container {
@@ -19,7 +19,7 @@ body {
     width: 100%;
     max-width: 700px;
     box-sizing: border-box;
-    position: relative; /* Для позиционирования внутренних элементов, если понадобится */
+    position: relative;
 }
 
 .screen {
@@ -27,9 +27,9 @@ body {
 }
 
 .screen.hidden {
-    display: none; /* Полностью скрываем элемент */
+    display: none;
     opacity: 0;
-    pointer-events: none; /* Отключаем события мыши */
+    pointer-events: none;
 }
 
 .screen.active {
@@ -124,7 +124,7 @@ button:disabled {
 
 .options-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2 колонки или 1, если мало места */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 15px;
     margin-bottom: 20px;
 }
@@ -140,7 +140,7 @@ button:disabled {
     text-align: left;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
-    word-wrap: break-word; /* Для длинных вариантов */
+    word-wrap: break-word;
 }
 
 .option-button:hover:not(.disabled) {
@@ -173,7 +173,7 @@ button:disabled {
     font-size: 1.1em;
     font-weight: bold;
     margin-top: 15px;
-    min-height: 25px; /* Чтобы не прыгал макет */
+    min-height: 25px;
 }
 
 .feedback.correct {
@@ -193,4 +193,13 @@ button:disabled {
 
 #results-screen strong {
     color: #007bff;
+}
+
+.section-display {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #6c757d; /* Серый цвет, чтобы отличался от вопроса */
+    margin-top: -15px; /* Поднять немного выше к заголовку */
+    margin-bottom: 20px; /* Отделить от текста вопроса */
 }
