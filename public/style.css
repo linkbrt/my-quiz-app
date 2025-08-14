@@ -1,0 +1,196 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Изменено на flex-start, чтобы контент не центрировался по вертикали, если он короткий */
+    min-height: 100vh; /* Убедимся, что тело занимает всю высоту окна */
+    padding-top: 50px; /* Немного отступ сверху */
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box;
+    position: relative; /* Для позиционирования внутренних элементов, если понадобится */
+}
+
+.screen {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.screen.hidden {
+    display: none; /* Полностью скрываем элемент */
+    opacity: 0;
+    pointer-events: none; /* Отключаем события мыши */
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Стартовый экран */
+#start-screen .input-group {
+    margin-bottom: 20px;
+}
+
+#start-screen label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+#start-screen input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+#start-screen .mode-selection {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#start-screen .mode-selection label {
+    display: inline-block;
+    margin: 0 15px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+#start-screen .mode-selection input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Кнопки общие */
+button {
+    display: block;
+    width: 100%;
+    padding: 15px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Экран викторины */
+#quiz-screen #question-text {
+    font-size: 1.4em;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    text-align: center;
+    background-color: #eaf3ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2 колонки или 1, если мало места */
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.option-button {
+    color: black;
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    font-size: 1em;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
+    word-wrap: break-word; /* Для длинных вариантов */
+}
+
+.option-button:hover:not(.disabled) {
+    background-color: #e2e6ea;
+    border-color: #a7d0ff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+.option-button.correct {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+    font-weight: bold;
+}
+
+.option-button.incorrect {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+    font-weight: bold;
+}
+
+.option-button.disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.feedback {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 15px;
+    min-height: 25px; /* Чтобы не прыгал макет */
+}
+
+.feedback.correct {
+    color: #28a745;
+}
+
+.feedback.incorrect {
+    color: #dc3545;
+}
+
+/* Экран результатов */
+#results-screen p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    text-align: center;
+}
+
+#results-screen strong {
+    color: #007bff;
+}

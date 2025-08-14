@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест на знания</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Стартовый экран -->
+        <div id="start-screen" class="screen active">
+            <h1>Добро пожаловать в тест!</h1>
+            <div class="input-group">
+                <label for="username">Ваше имя:</label>
+                <input type="text" id="username" placeholder="Введите ваше имя" required>
+            </div>
+            <div class="mode-selection">
+                <p>Выберите режим теста:</p>
+                <label>
+                    <input type="radio" name="quiz-mode" value="50" checked> 50 вопросов
+                </label>
+                <label>
+                    <input type="radio" name="quiz-mode" value="all"> Все вопросы
+                </label>
+            </div>
+            <button id="start-quiz-btn">Начать тест</button>
+        </div>
+
+        <!-- Экран викторины -->
+        <div id="quiz-screen" class="screen hidden">
+            <h2 id="quiz-header">Вопрос <span id="current-question-number">1</span> из <span id="total-questions">X</span></h2>
+            <div class="question-container">
+                <p id="question-text"></p>
+                <div id="options-container" class="options-grid">
+                    <!-- Варианты ответов будут вставляться сюда через JS -->
+                </div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+            <button id="next-question-btn" class="hidden">Далее</button>
+        </div>
+
+        <!-- Экран результатов -->
+        <div id="results-screen" class="screen hidden">
+            <h1>Результаты теста</h1>
+            <p>Имя пользователя: <strong id="results-username"></strong></p>
+            <p>Вы ответили правильно на: <strong id="correct-answers-count">0</strong> вопросов</p>
+            <p>Вы ответили неправильно на: <strong id="incorrect-answers-count">0</strong> вопросов</p>
+            <p>Ваш итоговый балл: <strong id="score">0</strong> из <strong id="max-score">0</strong></p>
+            <button id="play-again-btn">Начать тест заново</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
