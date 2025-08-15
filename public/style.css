@@ -245,3 +245,67 @@ button:disabled {
     cursor: not-allowed;
     color: #6c757d;
 }
+
+.mistakes-summary {
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.mistakes-summary h2 {
+    font-size: 1.3em;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#mistakes-list {
+    margin-bottom: 20px;
+}
+
+.mistake-item {
+    background-color: #ffe0e6; /* Легкий красный фон для ошибок */
+    border: 1px solid #ffb3c1;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.mistake-item p {
+    margin: 0 0 5px 0;
+    text-align: left; /* Важно, чтобы текст не был по центру */
+}
+
+.mistake-item .question-text {
+    font-weight: bold;
+    color: #333;
+}
+
+.mistake-item .user-answer {
+    color: #dc3545; /* Красный для неправильного ответа пользователя */
+    font-weight: bold;
+}
+
+.mistake-item .correct-answer {
+    color: #28a745; /* Зеленый для правильного ответа */
+    font-weight: bold;
+}
+
+.no-mistakes-message {
+    text-align: center;
+    font-weight: bold;
+    color: #28a745; /* Зеленый для сообщения об отсутствии ошибок */
+}
+
+#retake-mistakes-btn {
+    background-color: #6f42c1; /* Фиолетовый для кнопки пересдачи ошибок */
+}
+
+#retake-mistakes-btn:hover {
+    background-color: #5a34a0;
+}

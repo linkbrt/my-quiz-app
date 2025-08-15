@@ -31,6 +31,9 @@
                     <label>
                         <input type="radio" name="quiz-mode" value="simulation"> Имитация теста (50 вопросов из разных разделов)
                     </label>
+                    <label>
+                        <input type="radio" name="quiz-mode" value="5"> 5 вопросов (для тестирования)
+                    </label>
                 </div>
                 <br>
                 <label>
@@ -60,12 +63,23 @@
         </div>
 
         <!-- Экран результатов -->
+                <!-- Экран результатов -->
         <div id="results-screen" class="screen hidden">
             <h1>Результаты теста</h1>
             <p>Имя пользователя: <strong id="results-username"></strong></p>
             <p>Вы ответили правильно на: <strong id="correct-answers-count">0</strong> вопросов</p>
             <p>Вы ответили неправильно на: <strong id="incorrect-answers-count">0</strong> вопросов</p>
             <p>Ваш итоговый балл: <strong id="score">0</strong> из <strong id="max-score">0</strong></p>
+
+            <div id="mistakes-summary" class="mistakes-summary">
+                <h2>Ваши ошибки:</h2>
+                <div id="mistakes-list">
+                    <!-- Список ошибок будет здесь -->
+                    <p class="no-mistakes-message">Поздравляем! Вы не допустили ошибок.</p>
+                </div>
+                <button id="retake-mistakes-btn" class="hidden">Пройти тест с ошибками</button>
+            </div>
+            
             <button id="play-again-btn">Начать тест заново</button>
         </div>
     </div>

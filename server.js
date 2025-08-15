@@ -79,7 +79,10 @@ app.get('/api/questions', (req, res) => {
 
     let questionsToPrepare = [];
 
-    if (mode === '50') {
+    if (mode === '5') { // <--- НОВОЕ: Режим 5 вопросов для тестирования
+        questionsToPrepare = shuffleArray([...allQuestions]).slice(0, 5);
+        console.log(`Запрошены 5 случайных вопросов.`);
+    } else if (mode === '50') {
         questionsToPrepare = shuffleArray([...allQuestions]).slice(0, 50);
     } else if (mode === 'simulation') {
         let selectedSimulationQuestions = [];
