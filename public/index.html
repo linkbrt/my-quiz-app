@@ -18,14 +18,29 @@
             <div class="mode-selection">
                 <p>Выберите режим теста:</p>
                 <label>
-                    <input type="radio" name="quiz-mode" value="50" checked> 50 вопросов
+                    <input type="radio" name="quiz-type" value="mode_based" checked>
+                    Выберите режим:
                 </label>
+                <div class="mode-options">
+                    <label>
+                        <input type="radio" name="quiz-mode" value="50" checked> 50 вопросов
+                    </label>
+                    <label>
+                        <input type="radio" name="quiz-mode" value="all"> Все вопросы
+                    </label>
+                    <label>
+                        <input type="radio" name="quiz-mode" value="simulation"> Имитация теста (50 вопросов из разных разделов)
+                    </label>
+                </div>
+                <br>
                 <label>
-                    <input type="radio" name="quiz-mode" value="all"> Все вопросы
+                    <input type="radio" name="quiz-type" value="section_based">
+                    Пройти тест по разделу:
                 </label>
-                <label>
-                    <input type="radio" name="quiz-mode" value="simulation"> Имитация теста (50 вопросов из разных разделов)
-                </label>
+                <select id="section-select" disabled>
+                    <!-- Опции будут добавлены через JavaScript -->
+                    <option value="">Выберите раздел</option>
+                </select>
             </div>
             <button id="start-quiz-btn">Начать тест</button>
         </div>

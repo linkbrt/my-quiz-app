@@ -5,17 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsScreen = document.getElementById('results-screen');
 
     const usernameInput = document.getElementById('username');
+    const quizTypeRadios = document.querySelectorAll('input[name="quiz-type"]'); // <--- НОВОЕ
+    const modeOptionsDiv = document.querySelector('.mode-options'); // <--- НОВОЕ
     const quizModeRadios = document.querySelectorAll('input[name="quiz-mode"]');
+    const sectionSelect = document.getElementById('section-select'); // <--- НОВОЕ
     const startQuizBtn = document.getElementById('start-quiz-btn');
 
     const quizHeader = document.getElementById('quiz-header');
     const currentQuestionNumberSpan = document.getElementById('current-question-number');
     const totalQuestionsSpan = document.getElementById('total-questions');
+    const sectionNameDisplay = document.getElementById('section-name');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
     const feedbackDiv = document.getElementById('feedback');
     const nextQuestionBtn = document.getElementById('next-question-btn');
-    const sectionNameDisplay = document.getElementById('section-name');
 
     const resultsUsernameSpan = document.getElementById('results-username');
     const correctAnswersCountSpan = document.getElementById('correct-answers-count');
@@ -26,11 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Переменные состояния викторины ---
     let userName = '';
-    let quizMode = '50'; // По умолчанию 50 вопросов
-    let questionsForCurrentSession = []; // Массив вопросов для текущей сессии
+    let selectedQuizType = 'mode_based'; // 'mode_based' или 'section_based'
+    let selectedMode = '50'; // Для 'mode_based'
+    let selectedSectionIndex = null; // Для 'section_based'
+    let questionsForCurrentSession = [];
     let currentQuestionIndex = 0;
     let score = 0;
-    let userAnswers = []; // Для сохранения ответов пользователя (для отправки на сервер)
+    let userAnswers = [];
+
+    // Названия разделов, должны совпадать с server.js
+    // Используем эти названия для заполнения выпадающего списка
+    const SECTION_NAMES = [
+        "Основы алгоритмизации и программирования",
+        "ЭВМ  и периферийные устройства",
+        "Сети и телекоммуникации",
+        "Операционные системы",
+        "Базы данных"
+    ];
 
     // --- Вспомогательные функции для управления экранами ---
     function showScreen(screenId) {
@@ -42,6 +57,56 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(screenId).classList.add('active');
     }
 
+    // --- Инициализация выпадающего списка разделов ---
+    function populateSectionSelect() {
+        sectionSelect.innerHTML = '<option value="">Выберите раздел</option>'; // Очищаем и добавляем дефолтную опцию
+        SECTION_NAMES.forEach((name, index) => {
+            const option = document.createElement('option');
+            option.value = index; // Отправляем индекс раздела на бэкенд
+            option.textContent = name;
+            sectionSelect.appendChild(option);
+        });
+    }
+
+    // --- Логика переключения между выбором режима и выбором раздела ---
+    function updateQuizTypeSelection() {
+        selectedQuizType = document.querySelector('input[name="quiz-type"]:checked').value;
+
+        if (selectedQuizType === 'mode_based') {
+            modeOptionsDiv.style.display = 'block';
+            sectionSelect.disabled = true;
+            // Убедимся, что выбран хоть какой-то режим, если его не было
+            selectedMode = document.querySelector('input[name="quiz-mode"]:checked')?.value || '50';
+            selectedSectionIndex = null;
+        } else if (selectedQuizType === 'section_based') {
+            modeOptionsDiv.style.display = 'none';
+            sectionSelect.disabled = false;
+            // Убедимся, что выбран хоть какой-то раздел, если его не было
+            selectedSectionIndex = sectionSelect.value === '' ? null : parseInt(sectionSelect.value);
+            selectedMode = null;
+        }
+    }
+
+    // --- Обработчики событий для радио-кнопок и селекта ---
+    quizTypeRadios.forEach(radio => {
+        radio.addEventListener('change', updateQuizTypeSelection);
+    });
+
+    quizModeRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (document.querySelector('input[name="quiz-type"][value="mode_based"]').checked) {
+                selectedMode = radio.value;
+            }
+        });
+    });
+
+    sectionSelect.addEventListener('change', () => {
+        if (document.querySelector('input[name="quiz-type"][value="section_based"]').checked) {
+            selectedSectionIndex = sectionSelect.value === '' ? null : parseInt(sectionSelect.value);
+        }
+    });
+
+
     // --- Инициализация и запуск викторины ---
     startQuizBtn.addEventListener('click', async () => {
         userName = usernameInput.value.trim();
@@ -50,7 +115,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        quizMode = document.querySelector('input[name="quiz-mode"]:checked').value;
+        // Проверка выбранного режима/раздела перед стартом
+        if (selectedQuizType === 'mode_based' && !selectedMode) {
+            alert('Пожалуйста, выберите режим теста (50 вопросов, Все вопросы, Имитация теста).');
+            return;
+        }
+        if (selectedQuizType === 'section_based' && (selectedSectionIndex === null || isNaN(selectedSectionIndex))) {
+            alert('Пожалуйста, выберите раздел для прохождения теста.');
+            return;
+        }
+
 
         // Сброс состояния для нового теста
         questionsForCurrentSession = [];
@@ -62,18 +136,23 @@ document.addEventListener('DOMContentLoaded', () => {
         nextQuestionBtn.classList.add('hidden');
 
         try {
-            // Запрашиваем вопросы с сервера с учетом выбранного режима
-            // ИСПОЛЬЗУЕМ ОТНОСИТЕЛЬНЫЕ ПУТИ, так как бэкенд и фронтенд на одном домене
-            const response = await fetch(`/api/questions?mode=${quizMode}`);
+            let apiUrl = '/api/questions?';
+            if (selectedQuizType === 'mode_based') {
+                apiUrl += `mode=${selectedMode}`;
+            } else { // 'section_based'
+                apiUrl += `sectionIndex=${selectedSectionIndex}`;
+            }
+
+            const response = await fetch(apiUrl); // Отправляем запрос с соответствующими параметрами
             if (!response.ok) {
                 throw new Error(`Ошибка при загрузке вопросов: ${response.status}`);
             }
             questionsForCurrentSession = await response.json();
 
             if (questionsForCurrentSession.length === 0) {
-                alert('Не удалось загрузить вопросы. Пожалуйста, попробуйте позже или выберите другой режим.');
+                alert('Не удалось загрузить вопросы. Пожалуйста, попробуйте позже или выберите другой режим/раздел.');
                 console.error('Сервер вернул пустой список вопросов.');
-                showScreen('start-screen'); // Возвращаемся на старт
+                showScreen('start-screen');
                 return;
             }
 
@@ -83,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Ошибка:', error);
             alert(`Произошла ошибка при загрузке теста: ${error.message}`);
-            showScreen('start-screen'); // Возвращаемся на старт
+            showScreen('start-screen');
         }
     });
 
@@ -91,35 +170,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayQuestion() {
         const currentQuestion = questionsForCurrentSession[currentQuestionIndex];
         if (!currentQuestion) {
-            showResults(); // Если вопросов больше нет, показываем результаты
+            showResults();
             return;
         }
 
         currentQuestionNumberSpan.textContent = currentQuestionIndex + 1;
-        questionText.textContent = currentQuestion.question;
         sectionNameDisplay.textContent = currentQuestion.sectionName;
-        optionsContainer.innerHTML = ''; // Очищаем предыдущие варианты
+        questionText.textContent = currentQuestion.question;
+        optionsContainer.innerHTML = '';
 
         currentQuestion.options.forEach(option => {
             const button = document.createElement('button');
             button.classList.add('option-button');
             button.textContent = option;
-            // Используем замыкание для передачи выбранного варианта
             button.addEventListener('click', () => handleAnswerClick(button, option, currentQuestion.correct_answer));
             optionsContainer.appendChild(button);
         });
 
-        feedbackDiv.textContent = ''; // Очищаем обратную связь
-        feedbackDiv.classList.remove('correct', 'incorrect'); // Удаляем классы обратной связи
-        nextQuestionBtn.classList.add('hidden'); // Скрываем кнопку "Далее" до ответа
+        feedbackDiv.textContent = '';
+        feedbackDiv.classList.remove('correct', 'incorrect');
+        nextQuestionBtn.classList.add('hidden');
     }
 
     // --- Обработка выбора ответа ---
     function handleAnswerClick(clickedButton, selectedOption, correctAnswer) {
-        // Отключаем все кнопки вариантов, чтобы нельзя было выбрать несколько раз
         document.querySelectorAll('.option-button').forEach(button => {
             button.classList.add('disabled');
-            button.disabled = true; // Отключаем интерактивность
+            button.disabled = true;
         });
 
         const isCorrect = (selectedOption === correctAnswer);
@@ -136,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.classList.remove('correct');
             clickedButton.classList.add('incorrect');
 
-            // Подсвечиваем правильный ответ
             document.querySelectorAll('.option-button').forEach(button => {
                 if (button.textContent === correctAnswer) {
                     button.classList.add('correct');
@@ -144,15 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Сохраняем ответ пользователя для отправки на сервер
         userAnswers.push({
             question: questionsForCurrentSession[currentQuestionIndex].question,
             user_answer: selectedOption,
             correct_answer: correctAnswer,
-            is_correct: isCorrect
+            is_correct: isCorrect,
+            sectionName: questionsForCurrentSession[currentQuestionIndex].sectionName // Добавляем раздел в сохраняемые ответы
         });
 
-        nextQuestionBtn.classList.remove('hidden'); // Показываем кнопку "Далее"
+        nextQuestionBtn.classList.remove('hidden');
     }
 
     // --- Переход к следующему вопросу или результатам ---
@@ -178,10 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreSpan.textContent = score;
         maxScoreSpan.textContent = totalQuestionsCount;
 
-        // --- Отправка результатов на сервер ---
         console.log('Отправка результатов на сервер...');
         try {
-            // ИСПОЛЬЗУЕМ ОТНОСИТЕЛЬНЫЙ ПУТЬ, так как бэкенд и фронтенд на одном домене
             const response = await fetch('/api/submit-results', {
                 method: 'POST',
                 headers: {
@@ -189,7 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     userName: userName,
-                    mode: quizMode,
+                    quizType: selectedQuizType, // Тип теста (режимный или по разделу)
+                    mode: selectedMode, // Если режимный
+                    sectionIndex: selectedSectionIndex, // Если по разделу
+                    sectionName: selectedQuizType === 'section_based' ? SECTION_NAMES[selectedSectionIndex] : null, // Название раздела
                     score: score,
                     totalQuestions: totalQuestionsCount,
                     answers: userAnswers,
@@ -212,18 +289,25 @@ document.addEventListener('DOMContentLoaded', () => {
     playAgainBtn.addEventListener('click', () => {
         // Сброс всех переменных состояния
         userName = '';
-        usernameInput.value = ''; // Очищаем поле ввода имени
-        quizMode = '50'; // Сбрасываем режим на дефолтный
+        usernameInput.value = '';
+        document.querySelector('input[name="quiz-type"][value="mode_based"]').checked = true; // Сбрасываем тип на "режимы"
+        selectedQuizType = 'mode_based';
+        selectedMode = '50'; // Сбрасываем режим на дефолтный
         document.querySelector('input[name="quiz-mode"][value="50"]').checked = true;
+        selectedSectionIndex = null; // Сбрасываем выбранный раздел
+        sectionSelect.value = ''; // Очищаем выбор в селекте
 
-        questionsForCurrentSession = []; // Сброс вопросов текущей сессии
+        questionsForCurrentSession = [];
         currentQuestionIndex = 0;
         score = 0;
         userAnswers = [];
 
+        updateQuizTypeSelection(); // Обновим состояние элементов формы
         showScreen('start-screen');
     });
 
-    // Инициализация: показываем стартовый экран при загрузке страницы
+    // --- Инициализация при загрузке страницы ---
+    populateSectionSelect(); // Заполняем выпадающий список разделов
+    updateQuizTypeSelection(); // Устанавливаем начальное состояние формы
     showScreen('start-screen');
 });

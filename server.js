@@ -75,7 +75,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // --- API endpoint для получения вопросов ---
 app.get('/api/questions', (req, res) => {
     const mode = req.query.mode;
-    let questionsToPrepare = []; // Вопросы, отобранные по режиму, но еще не с перемешанными опциями
+    const sectionIndex = req.query.sectionIndex; // <--- НОВОЕ: получаем индекс раздела
+
+    let questionsToPrepare = [];
 
     if (mode === '50') {
         questionsToPrepare = shuffleArray([...allQuestions]).slice(0, 50);
@@ -107,7 +109,19 @@ app.get('/api/questions', (req, res) => {
         if (questionsToPrepare.length < TARGET_TOTAL_QUESTIONS_IN_SIMULATION) {
             console.warn(`В режиме "Имитация теста" загружено только ${questionsToPrepare.length} вопросов, вместо ${TARGET_TOTAL_QUESTIONS_IN_SIMULATION}.`);
         }
+    } else if (sectionIndex !== undefined && sectionIndex !== null && !isNaN(parseInt(sectionIndex))) { // <--- НОВОЕ: Обработка запроса по разделу
+        const parsedSectionIndex = parseInt(sectionIndex);
 
+        if (parsedSectionIndex >= 0 && parsedSectionIndex < SECTION_START_INDICES.length) {
+            const startIndex = SECTION_START_INDICES[parsedSectionIndex];
+            const endIndex = (parsedSectionIndex + 1 < SECTION_START_INDICES.length) ? SECTION_START_INDICES[parsedSectionIndex + 1] : allQuestions.length;
+
+            questionsToPrepare = shuffleArray([...allQuestions.slice(startIndex, endIndex)]);
+            console.log(`Запрошены вопросы для раздела "${SECTION_NAMES[parsedSectionIndex]}" (${questionsToPrepare.length} вопросов).`);
+        } else {
+            console.warn(`Неверный индекс раздела: ${sectionIndex}. Возвращаем все вопросы.`);
+            questionsToPrepare = shuffleArray([...allQuestions]); // Fallback на все вопросы
+        }
     } else { // 'all' или любой другой режим по умолчанию
         questionsToPrepare = shuffleArray([...allQuestions]);
     }

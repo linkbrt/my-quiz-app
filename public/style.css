@@ -203,3 +203,45 @@ button:disabled {
     margin-top: -15px; /* Поднять немного выше к заголовку */
     margin-bottom: 20px; /* Отделить от текста вопроса */
 }
+
+#start-screen .mode-selection p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#start-screen .mode-selection > label { /* Стили для новых радио-кнопок "Выбрать режим" / "Пройти по разделу" */
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.mode-options, #section-select {
+    margin-left: 25px; /* Небольшой отступ для вложенных опций */
+    margin-top: 10px;
+}
+
+.mode-options label {
+    display: block !important; /* Переопределить inline-block для Stacked radios */
+    margin-bottom: 8px;
+    font-weight: normal;
+}
+
+#section-select {
+    width: calc(100% - 25px); /* Учитываем отступ */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: #f8f8f8;
+}
+
+#section-select:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    color: #6c757d;
+}
