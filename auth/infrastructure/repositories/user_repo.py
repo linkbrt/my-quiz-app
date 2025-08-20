@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy.orm import Session
 from sqlalchemy import Column, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
-from infrastructure.db import Base
-from domain.models import UserCreate
+from auth.infrastructure.db import Base
+from auth.domain.models import UserCreate
 
 
 class UserModel(Base):

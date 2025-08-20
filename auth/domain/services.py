@@ -1,6 +1,6 @@
 from .models import UserCreate
-from infrastructure.repositories.user_repo import UserRepository
-from core.security import get_password_hash
+from auth.infrastructure.repositories.user_repo import UserRepository
+from auth.core.security import get_password_hash
 
 class UserService:
     def __init__(self, user_repo: UserRepository):

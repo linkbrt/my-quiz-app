@@ -1,12 +1,14 @@
 # api/v1/users.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from domain.models import User, UserCreate
-from domain.services import UserService
-from infrastructure.repositories.user_repo import UserRepository
-from infrastructure.db import get_db
+from auth.domain.models import User, UserCreate
+from auth.domain.services import UserService
+from auth.infrastructure.repositories.user_repo import UserRepository
+from auth.infrastructure.db import get_db
+from auth.api.dependencies import get_external_api_client
 
 import requests
+import uuid
 
 router = APIRouter()
 
@@ -32,18 +34,12 @@ def create_user(
     return db_user
 
 @router.get("/obtain_token")
-def obtain_token():
-    url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
+async def obtain_token(ai_token = Depends(get_external_api_client)):
 
-    payload={}
-    headers = {
-    'Accept': 'application/json',
-    'Authorization': 'Bearer <Access token>'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload, verify=False)
-
-    print(response.text)
+    print("request")
+    ff = await ai_token._perform_token_refresh()
+    print(ff)
+    return ai_token
 
 
 @router.get("/{user_id}", response_model=User)

@@ -1,8 +1,8 @@
 # app.py
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from api.main import router as api_v1_router
-from infrastructure.db import Base, engine
+from auth.api.main import router as api_v1_router
+from auth.infrastructure.db import Base, engine
 
 # Создаем таблицы в базе данных (если их еще нет)
 Base.metadata.create_all(bind=engine)
@@ -18,6 +18,6 @@ app = FastAPI(
 app.include_router(api_v1_router, prefix="/api/v1")
 
 # Подключаем статическую папку 'public' для фронтенда
-app.mount("/", StaticFiles(directory="public", html=True), name="static")
+# app.mount("/", StaticFiles(directory="/home/dan/my-quiz-app/public", html=True), name="static")
 
 # Команда для запуска: uvicorn app:app --reload
