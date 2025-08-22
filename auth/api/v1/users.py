@@ -7,7 +7,6 @@ from auth.infrastructure.repositories.user_repo import UserRepository
 from auth.infrastructure.db import get_db
 from auth.api.dependencies import get_external_api_client
 
-import requests
 import uuid
 
 router = APIRouter()
@@ -16,6 +15,16 @@ def get_user_service(db: Session = Depends(get_db)) -> UserService:
     user_repo = UserRepository(db)
     return UserService(user_repo)
 
+
+@router.get("/", response_model=list[User])
+def list_users(
+    service: UserService = Depends(get_user_service)
+):
+    """
+    Получение списка всех пользователей.
+    """
+    users = service.get_all()
+    return users
 
 @router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
 def create_user(
@@ -33,14 +42,6 @@ def create_user(
         )
     return db_user
 
-@router.get("/obtain_token")
-async def obtain_token(ai_token = Depends(get_external_api_client)):
-
-    print("request")
-    ff = await ai_token._perform_token_refresh()
-    print(ff)
-    return ai_token
-
 
 @router.get("/{user_id}", response_model=User)
 def read_user(
@@ -50,7 +51,20 @@ def read_user(
     """
     Получение информации о пользователе по его ID.
     """
-    db_user = service.get_user_by_id(user_id)
+    db_user = service.get_user_by_id(uuid.UUID(user_id))
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(
+    user_id: str,
+    service: UserService = Depends(get_user_service)
+):
+    """
+    Удаление пользователя по его ID.
+    """
+    success = service.delete_user(uuid.UUID(user_id))
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+    return None

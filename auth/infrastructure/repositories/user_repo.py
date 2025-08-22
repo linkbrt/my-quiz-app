@@ -21,11 +21,17 @@ class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
+    def get_all(self):
+        return self.db.query(UserModel).all()
+
     def get_by_id(self, user_id: str):
         return self.db.query(UserModel).filter(UserModel.id == user_id).first()
 
     def get_by_email(self, email: str):
         return self.db.query(UserModel).filter(UserModel.email == email).first()
+    
+    def get_by_username(self, username: str):
+        return self.db.query(UserModel).filter(UserModel.username == username).first()
 
     def create(self, user_data: UserCreate, hashed_password: str):
         # Создаем объект модели SQLAlchemy
@@ -40,3 +46,8 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(db_user)
         return db_user
+    
+    def delete(self, user: UserModel):
+        self.db.delete(user)
+        self.db.commit()
+        return True
