@@ -29,7 +29,7 @@ async def send_message(request: MessageRequest, ai_token: ExternalAPIAuthClient 
                     "messages": [
                         {
                             "role": "system",
-                            "content": "Ты - интервьюер-сеньор в крупной IT компании. Ты должен проверить ответ пользователя на вопрос",
+                            "content": "Ты - интервьюер-сеньор в крупной IT компании. Ты должен проверить ответ пользователя на вопрос. В качестве ответа передавай значение типа (float) от 0 до 1.",
                         },
                         {
                             "role": "user",
