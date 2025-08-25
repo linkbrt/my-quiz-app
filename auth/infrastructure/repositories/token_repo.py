@@ -1,11 +1,10 @@
 # infrastructure/repositories/token_repo.py
 import uuid
-from sqlalchemy.orm import Session
-from sqlalchemy import Column, String
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import Column, String, select
 from sqlalchemy.dialects.postgresql import UUID
 from auth.infrastructure.db import Base
 import jwt
-
 from auth.core.config import settings
 
 
@@ -18,20 +17,27 @@ class TokenModel(Base):
 
 
 class TokenRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_by_user_id(self, user_id: str):
-        # Преобразуем строку в UUID
-        return self.db.query(TokenModel).filter(TokenModel.user_id == uuid.UUID(user_id)).first()
+    async def get_by_user_id(self, user_id: str):
+        result = await self.db.execute(
+            select(TokenModel).where(TokenModel.user_id == uuid.UUID(user_id))
+        )
+        return result.scalar_one_or_none()
 
-    def create(self, user_id: str):
+    async def create(self, user_id: str):
         db_token = TokenModel(
             id=uuid.uuid4(),
             access_token=jwt.encode({"user_id": user_id}, settings.JWT_SECRET_KEY, algorithm="HS256"),
-            user_id=uuid.UUID(user_id)  # <-- Исправлено: преобразуем строку в UUID
+            user_id=uuid.UUID(user_id),
         )
         self.db.add(db_token)
-        self.db.commit()
-        self.db.refresh(db_token)
+        await self.db.commit()
+        await self.db.refresh(db_token)
         return db_token
+    
+    async def delete(self, token: TokenModel):
+        await self.db.delete(token)
+        await self.db.commit()
+        return True

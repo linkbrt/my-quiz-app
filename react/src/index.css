@@ -45,19 +45,19 @@ h1, h2 {
 }
 
 /* Стартовый экран */
-#start-screen .input-group {
+.input-group {
     margin-bottom: 20px;
 }
 
-#start-screen label {
+label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
     color: #555;
 }
 
-#start-screen input[type="text"] {
-    width: calc(100% - 20px);
+input {
+    width: 100%;
     padding: 12px 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -65,19 +65,19 @@ h1, h2 {
     box-sizing: border-box;
 }
 
-#start-screen .mode-selection {
+.mode-selection {
     margin-bottom: 30px;
     text-align: center;
 }
 
-#start-screen .mode-selection label {
+.mode-selection label {
     display: inline-block;
     margin: 0 15px;
     font-weight: normal;
     cursor: pointer;
 }
 
-#start-screen .mode-selection input[type="radio"] {
+.mode-selection input[type="radio"] {
     margin-right: 8px;
 }
 

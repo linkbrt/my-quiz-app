@@ -22,3 +22,7 @@ class Token(BaseModel):
 
 class TokenCreate(Token):
     user_id: UUID4
+
+class TokenUserData(BaseModel):
+    username: str
+    password: str

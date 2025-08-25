@@ -10,6 +10,15 @@ services:
       - .:/code
     depends_on:
       - db
+  react:
+    build: 
+      context: ./react
+      dockerfile: Dockerfile
+    ports:
+      - "80:5173"
+    depends_on:
+      - web
+    command: npm run dev
   db:
     image: postgres:13
     environment:

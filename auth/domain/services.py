@@ -7,36 +7,36 @@ class UserService:
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
 
-    def get_all(self):
+    async def get_all(self):
         """Получить всех пользователей."""
-        return self.user_repo.get_all()
+        return await self.user_repo.get_all()
 
-    def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str):
         """Получить пользователя по ID."""
-        return self.user_repo.get_by_id(user_id)
+        return await self.user_repo.get_by_id(user_id)
 
-    def create_user(self, user_data: UserCreate):
+    async def create_user(self, user_data: UserCreate):
         """Создать нового пользователя."""
-        db_user = self.user_repo.get_by_email(user_data.email)
+        db_user = await self.user_repo.get_by_email(user_data.email)
         if db_user:
             return None
 
         hashed_password = get_password_hash(user_data.password)
 
-        return self.user_repo.create(user_data, hashed_password)
+        return await self.user_repo.create(user_data, hashed_password)
     
-    def verify_user(self, username: str, password: str):
+    async def verify_user(self, username: str, password: str):
         """Проверить пользователя по имени и паролю."""
-        user = self.user_repo.get_by_username(username)
+        user = await self.user_repo.get_by_username(username)
         if user and verify_password(password, user.hashed_password):
             return user
         return None
     
-    def delete_user(self, user_id: str):
+    async def delete_user(self, user_id: str):
         """Удалить пользователя по ID."""
-        user = self.user_repo.get_by_id(user_id)
+        user = await self.user_repo.get_by_id(user_id)
         if user:
-            self.user_repo.delete(user)
+            await self.user_repo.delete(user)
             return True
         return False
 
@@ -45,10 +45,12 @@ class TokenService:
     def __init__(self, token_repo: TokenRepository):
         self.token_repo = token_repo
 
-    def get_token_by_user_id(self, user_id: str):
-        """Получить токен по ID пользователя."""
-        return self.token_repo.get_by_user_id(user_id)
+    async def get_token_by_user_id(self, user_id: str):
+        return await self.token_repo.get_by_user_id(user_id)
 
-    def create_token(self, user_id: str):
-        """Создать новый токен для пользователя."""
-        return self.token_repo.create(user_id)
+    async def create_token(self, user_id: str):
+        token = await self.get_token_by_user_id(user_id)
+        if token:
+            await self.token_repo.delete(token)
+
+        return await self.token_repo.create(user_id)

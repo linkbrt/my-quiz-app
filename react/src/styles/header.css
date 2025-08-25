@@ -1,0 +1,55 @@
+.app-header {
+    width: 100%;
+    background-color: #2c3e50; /* Темный фон шапки */
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed; /* Закрепляем шапку */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+}
+
+.header-nav .username-display {
+    margin-right: 20px;
+    font-size: 1.1em;
+}
+
+.header-nav .profile-link,
+.header-nav .auth-link {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.header-nav .profile-link:hover,
+.header-nav .auth-link:hover {
+    background-color: #34495e;
+}
+
+.header-nav .logout-button {
+    background-color: #e74c3c; /* Красная кнопка выхода */
+    margin-left: 20px;
+}
+
+.header-nav .logout-button:hover {
+    background-color: #c0392b;
+}

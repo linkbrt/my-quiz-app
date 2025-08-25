@@ -1,7 +1,7 @@
 # infrastructure/repositories/user_repo.py
 import uuid
-from sqlalchemy.orm import Session
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, String, Boolean, Column
 from sqlalchemy.dialects.postgresql import UUID
 from auth.infrastructure.db import Base
 from auth.domain.models import UserCreate
@@ -18,36 +18,38 @@ class UserModel(Base):
 
 
 class UserRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_all(self):
-        return self.db.query(UserModel).all()
+    async def get_all(self):
+        result = await self.db.execute(select(UserModel))
+        return result.scalars().all()
 
-    def get_by_id(self, user_id: str):
-        return self.db.query(UserModel).filter(UserModel.id == user_id).first()
+    async def get_by_id(self, user_id: str):
+        result = await self.db.execute(select(UserModel).where(UserModel.id == user_id))
+        return result.scalar_one_or_none()
 
-    def get_by_email(self, email: str):
-        return self.db.query(UserModel).filter(UserModel.email == email).first()
+    async def get_by_email(self, email: str):
+        result = await self.db.execute(select(UserModel).where(UserModel.email == email))
+        return result.scalar_one_or_none()
     
-    def get_by_username(self, username: str):
-        return self.db.query(UserModel).filter(UserModel.username == username).first()
+    async def get_by_username(self, username: str):
+        result = await self.db.execute(select(UserModel).where(UserModel.username == username))
+        return result.scalar_one_or_none()
 
-    def create(self, user_data: UserCreate, hashed_password: str):
-        # Создаем объект модели SQLAlchemy
+    async def create(self, user_data: UserCreate, hashed_password: str):
         db_user = UserModel(
-            id=uuid.uuid4(), # Генерируем новый UUID
+            id=uuid.uuid4(),
             email=user_data.email,
             username=user_data.username,
             hashed_password=hashed_password
         )
-        # Добавляем в сессию и сохраняем в БД
         self.db.add(db_user)
-        self.db.commit()
-        self.db.refresh(db_user)
+        await self.db.commit()
+        await self.db.refresh(db_user)
         return db_user
     
-    def delete(self, user: UserModel):
-        self.db.delete(user)
-        self.db.commit()
+    async def delete(self, user: UserModel):
+        await self.db.delete(user)
+        await self.db.commit()
         return True
