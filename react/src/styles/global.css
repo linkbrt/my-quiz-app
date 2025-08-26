@@ -41,9 +41,8 @@ button:disabled {
 
 /* Общий макет приложения */
 .app-layout {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
+    width: 60%;
+    margin: 0 auto;
 }
 
 .app-content {
@@ -54,4 +53,8 @@ button:disabled {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     margin: 20px; /* Отступы от краев */
     max-width: calc(100% - 280px); /* Учитываем ширину сайдбара и отступы */
+}
+
+#root {
+    width: 100%;
 }

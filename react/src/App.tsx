@@ -7,8 +7,8 @@ import './styles/global.css'; // Убедитесь, что глобальные
 function App() {
     return (
         <AuthProvider>
+            <Header />
             <div className="app-layout">
-                <Header />
                 <Sidebar />
                 <main className="app-content">
                     <h1>Добро пожаловать на курсы по языкам программирования!</h1>

@@ -3,9 +3,18 @@ version: '3.8'
 services:
   web:
     build: ./auth
-    command: uvicorn app:app --host 0.0.0.0 --port 80 --reload
+    command: uvicorn auth.app:app --host 0.0.0.0 --port 80 --reload
     ports:
       - "8000:80"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  questions:
+    build: ./questions
+    command: uvicorn questions.app:app --host 0.0.0.0 --port 80 --reload
+    ports:
+      - "8001:80"
     volumes:
       - .:/code
     depends_on:
@@ -15,7 +24,7 @@ services:
       context: ./react
       dockerfile: Dockerfile
     ports:
-      - "80:5173"
+      - "5173:5173"
     depends_on:
       - web
     command: npm run dev
@@ -27,6 +36,22 @@ services:
       - POSTGRES_DB=mydb
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
 
 volumes:
   postgres_data:
+  rabbitmq_data:
+  rabbitmq_log:
