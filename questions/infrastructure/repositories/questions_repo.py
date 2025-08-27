@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
 
-from domain.models.questions import Section, Quiz, Question, UserQuizAttempt
+from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt
 
 class SectionRepository:
     def __init__(self, db: AsyncSession):

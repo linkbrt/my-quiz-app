@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import List, Optional
-from domain.repositories import ISectionRepository, IQuizRepository, IQuestionRepository, IUserQuizAttemptRepository
-from domain.models.questions import Section, Quiz, Question, UserQuizAttempt
+from questions.domain.repositories import ISectionRepository, IQuizRepository, IQuestionRepository, IUserQuizAttemptRepository
+from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt
 
 class QuizService:
     def __init__(

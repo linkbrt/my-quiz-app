@@ -1,7 +1,7 @@
 import os
 from fastapi import Depends, HTTPException, status
-from infrastructure.external_api.auth_client import ExternalAPIAuthClient
-from core import config
+from auth.infrastructure.external_api.auth_client import ExternalAPIAuthClient
+from auth.core import config
 from dotenv import load_dotenv
 
 

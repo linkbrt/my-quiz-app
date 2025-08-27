@@ -8,7 +8,7 @@ from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 
-from infrastructure.db import Base
+from questions.infrastructure.db import Base
 
 class QuestionType(PyEnum):
     SINGLE_CHOICE = "single_choice"

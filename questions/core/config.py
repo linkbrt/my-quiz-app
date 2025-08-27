@@ -7,6 +7,6 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
 
     class Config:
-        env_file = ".env"
+        env_file = "questions/.env"
 
 settings = Settings()
