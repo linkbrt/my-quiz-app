@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from auth.api.v1 import users, messages_router, tokens
+from api.v1 import users, messages_router, tokens
 
 router = APIRouter()
 

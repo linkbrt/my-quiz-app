@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from questions.api.v1 import quizzes
+from api.v1 import quizzes
 
 router = APIRouter()
 

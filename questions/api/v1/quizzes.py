@@ -2,17 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from uuid import UUID
 
-from questions.domain.services import QuizService
-from questions.infrastructure.repositories.questions_repo import (
+from domain.services import QuizService
+from infrastructure.repositories.questions_repo import (
     SectionRepository,
     QuizRepository,
     QuestionRepository,
     UserQuizAttemptRepository,
 )
-from questions.infrastructure.db import get_db
+from infrastructure.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt
-from questions.api.v1.schemas import (
+from domain.models.questions import Section, Quiz, Question, UserQuizAttempt
+from api.v1.schemas import (
     SectionSchema,
     QuizSchema,
     QuestionSchema,

@@ -4,8 +4,8 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from auth.domain.models import UserCreate
-from auth.infrastructure.models import UserModel
+from domain.models import UserCreate
+from infrastructure.models import UserModel
 
 
 class UserRepository:

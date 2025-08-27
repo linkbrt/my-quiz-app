@@ -5,8 +5,8 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 # Импорт 'Base' из вашего микросервиса 'auth'
-from auth.infrastructure.db import Base # Убедитесь, что это правильный путь!
-from auth.infrastructure import models  # Импортируем модели, чтобы они были зарегистрированы в Base
+from infrastructure.db import Base # Убедитесь, что это правильный путь!
+from infrastructure import models  # Импортируем модели, чтобы они были зарегистрированы в Base
 
 from alembic import context
 

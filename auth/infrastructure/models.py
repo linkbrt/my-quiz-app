@@ -4,7 +4,7 @@ from sqlalchemy import select, String, Boolean, Column, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
-from auth.infrastructure.db import Base
+from infrastructure.db import Base
 
 
 class UserModel(Base):

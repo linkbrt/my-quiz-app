@@ -1,10 +1,10 @@
 # api/v1/users.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from auth.domain.models import User, UserCreate
-from auth.domain.services import UserService
-from auth.infrastructure.repositories.user_repo import UserRepository
-from auth.infrastructure.db import get_db
+from domain.models import User, UserCreate
+from domain.services import UserService
+from infrastructure.repositories.user_repo import UserRepository
+from infrastructure.db import get_db
 
 import uuid
 

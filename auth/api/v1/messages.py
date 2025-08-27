@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from auth.api.dependencies import get_external_api_client
-from auth.infrastructure.external_api.auth_client import ExternalAPIAuthClient
+from api.dependencies import get_external_api_client
+from infrastructure.external_api.auth_client import ExternalAPIAuthClient
 
 import requests
 import httpx

@@ -3,9 +3,9 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Column, String, select
 from sqlalchemy.dialects.postgresql import UUID
-from auth.infrastructure.db import Base
+from infrastructure.db import Base
 import jwt
-from auth.core.config import settings
+from core.config import settings
 
 
 class TokenModel(Base):
