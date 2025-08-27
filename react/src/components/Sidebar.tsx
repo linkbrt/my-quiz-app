@@ -1,20 +1,24 @@
-import React from 'react';
-import '../styles/sidebar.css'; // Подключаем стили для меню
+// src/components/Sidebar.tsx
+import type { FC } from 'react';
+import { NavLink } from 'react-router-dom';
+import '../styles/sidebar.css';
+import { useAuth } from './auth/AuthContext';
 
-function Sidebar() {
+const Sidebar: FC = () => {
+    const { isAuthenticated, user } = useAuth();
     return (
         <aside className="app-sidebar">
             <nav>
                 <ul>
-                    <li><a href="/">Главная</a></li>
-                    <li><a href="/courses">Курсы</a></li>
-                    <li><a href="/my-progress">Мой прогресс</a></li>
-                    <li><a href="/settings">Настройки</a></li>
-                    {/* Здесь можно добавить другие пункты меню */}
+                    <li><NavLink to="/" end>Главная</NavLink></li>
+                    <li><NavLink to="/sections">Разделы квизов</NavLink></li>
+                    <li><NavLink to="/my-attempts">Мои попытки</NavLink></li>
+                    <li><NavLink to="/settings">Настройки</NavLink></li>
+                    {user?.is_admin && <li><NavLink to="/admin">Администрирование</NavLink></li>}
                 </ul>
             </nav>
         </aside>
     );
-}
+};
 
 export default Sidebar;

@@ -26,11 +26,11 @@ class TokenRepository:
         )
         return result.scalar_one_or_none()
 
-    async def create(self, user_id: str):
+    async def create(self, data: dict):
         db_token = TokenModel(
             id=uuid.uuid4(),
-            access_token=jwt.encode({"user_id": user_id}, settings.JWT_SECRET_KEY, algorithm="HS256"),
-            user_id=uuid.UUID(user_id),
+            access_token=jwt.encode(data, settings.JWT_SECRET_KEY, algorithm="HS256"),
+            user_id=uuid.UUID(data.get('user_id')),
         )
         self.db.add(db_token)
         await self.db.commit()
@@ -41,3 +41,15 @@ class TokenRepository:
         await self.db.delete(token)
         await self.db.commit()
         return True
+
+    async def check_token(self, token: str):
+        try:
+            payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=["HS256"])
+            user_id: str = payload.get("user_id")
+            if user_id is None:
+                return None
+            return self.get_by_user_id(user_id)
+        except jwt.ExpiredSignatureError:
+            return None
+        except jwt.InvalidTokenError:
+            return None

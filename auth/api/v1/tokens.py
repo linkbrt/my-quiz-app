@@ -32,7 +32,9 @@ async def obtain_token(
             detail="Invalid credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    token = await service.create_token(str(user.id))
+    
+    data = {"user_id": str(user.id), "is_admin": user.is_admin}
+    token = await service.create_token(data)
     if not token:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -40,3 +42,16 @@ async def obtain_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     return {"access_token": token.access_token, "token_type": "bearer"}
+
+async def authorize_token(
+    token: str,
+    service: TokenService = Depends(get_token_service)
+):
+    token_data = await service.token_repo.get_by_access_token(token)
+    if not token_data:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return token_data

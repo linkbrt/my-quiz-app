@@ -48,9 +48,9 @@ class TokenService:
     async def get_token_by_user_id(self, user_id: str):
         return await self.token_repo.get_by_user_id(user_id)
 
-    async def create_token(self, user_id: str):
-        token = await self.get_token_by_user_id(user_id)
+    async def create_token(self, data: dict):
+        token = await self.get_token_by_user_id(data.get('user_id'))
         if token:
             await self.token_repo.delete(token)
 
-        return await self.token_repo.create(user_id)
+        return await self.token_repo.create(data)

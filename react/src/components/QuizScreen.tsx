@@ -1,9 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, type SetStateAction } from 'react';
 
-function QuizScreen({ questions, currentQuestionIndex, onAnswer, onNextQuestion }) {
-    const [selectedOption, setSelectedOption] = useState(null);
+interface Question {
+    question: string;
+    options: string[];
+    correct_answer: string;
+    sectionName?: string;
+}
+
+interface QuizScreenProps {
+    questions: Question[];
+    currentQuestionIndex: number;
+    onAnswer: (answer: any) => void;
+    onNextQuestion: () => void;
+}
+
+function QuizScreen({ questions, currentQuestionIndex, onAnswer, onNextQuestion }: QuizScreenProps) {
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [feedback, setFeedback] = useState('');
-    const [isCorrect, setIsCorrect] = useState(null); // null, true, false
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // null, true, false
     const [answered, setAnswered] = useState(false); // Для предотвращения повторных ответов
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -16,10 +30,10 @@ function QuizScreen({ questions, currentQuestionIndex, onAnswer, onNextQuestion 
         setAnswered(false);
     }, [currentQuestionIndex, questions]); // Зависит от индекса и самих вопросов
 
-    const handleOptionClick = (option) => {
+    const handleOptionClick = (option: string | SetStateAction<null>) => {
         if (answered) return; // Если уже ответили, игнорируем клик
 
-        setSelectedOption(option);
+        setSelectedOption(option as string);
         setAnswered(true);
 
         const correct = (option === currentQuestion.correct_answer);

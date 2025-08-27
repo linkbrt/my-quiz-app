@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // Названия разделов, должны совпадать с server.js
 const SECTION_NAMES = [
@@ -9,7 +9,11 @@ const SECTION_NAMES = [
     "Базы данных"
 ];
 
-function StartScreen({ onStartQuiz }) {
+interface StartScreenProps {
+    onStartQuiz: (quizOptions: any) => void;
+}
+
+function StartScreen({ onStartQuiz }: StartScreenProps) {
     const [username, setUsername] = useState('');
     const [quizType, setQuizType] = useState('mode_based'); // 'mode_based' или 'section_based'
     const [quizMode, setQuizMode] = useState('5'); // По умолчанию 5 вопросов для быстрого теста

@@ -1,20 +1,11 @@
 # infrastructure/repositories/user_repo.py
 import uuid
+
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, String, Boolean, Column
-from sqlalchemy.dialects.postgresql import UUID
-from auth.infrastructure.db import Base
+from sqlalchemy import select
+
 from auth.domain.models import UserCreate
-
-
-class UserModel(Base):
-    __tablename__ = "users"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    username = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+from auth.infrastructure.models import UserModel
 
 
 class UserRepository:

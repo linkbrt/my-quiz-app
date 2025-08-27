@@ -1,56 +1,77 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import Cookies from 'js-cookie'; // Используем библиотеку для удобной работы с куками
+// src/components/AuthContext.tsx
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import Cookies from 'js-cookie';
 
+interface User {
+    id: string; // UUID пользователя, должен приходить из сервиса аутентификации
+    username: string;
+    is_admin?: boolean;
+    // ... любые другие данные пользователя, которые вы хотите хранить
+}
 
-interface AuthContextProps {
-    user: any;
+interface AuthContextType {
+    user: User | null;
     isAuthenticated: boolean;
-    login: (token: string, userData: any) => void;
+    login: (token: string, userData: User) => void;
     logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthProviderProps {
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = useState<any>(null); // Замените any на конкретный тип пользователя, если он известен
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     useEffect(() => {
-        // При загрузке приложения проверяем наличие токена в куках
-        const token = Cookies.get('token');
-        if (token) {
-            // В реальном приложении здесь должен быть запрос к серверу
-            // для валидации токена и получения информации о пользователе.
-            // Для примера, пока что просто устанавливаем пользователя.
-            // Предположим, что токен содержит закодированное имя пользователя,
-            // или мы получаем его другим способом после успешной авторизации.
-            const dummyUsername = "Иван Петров"; // Замените на реальное получение имени из токена или API
-            setUser({ username: dummyUsername });
-            setIsAuthenticated(true);
-        } else {
-            setUser(null);
-            setIsAuthenticated(false);
-        }
+        const fetchData = async () => {
+            const token = Cookies.get('token');
+            if (token) {
+                try {
+                    const response = await fetch('http://localhost:8000/api/v1/obtain_token', { // Замените на ваш URL
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setUser(userData);
+                        setIsAuthenticated(true);
+                    } else {
+                        Cookies.remove('token');
+                        setUser(null);
+                        setIsAuthenticated(false);
+                    }
+                } catch (error) {
+                    console.error("Ошибка при запросе данных пользователя:", error);
+                    Cookies.remove('token');
+                    setUser(null);
+                    setIsAuthenticated(false);
+                }
+                const dummyUserId = "123e4567-e89b-12d3-a456-426614174000"; // Пример UUID
+                const dummyUsername = "Иван Петров"; 
+                setUser({ id: dummyUserId, username: dummyUsername });
+                setIsAuthenticated(true);
+                setUser(null);
+                setIsAuthenticated(false);
+            }
+        };
+        fetchData();
     }, []);
 
-    const login = (token: any, userData: any) => {
-        // При логине сохраняем токен в куки
-        Cookies.set('token', token, { expires: 7 }); // Токен будет храниться 7 дней
+    const login = (token: string, userData: User) => {
+        Cookies.set('token', token, { expires: 7 }); 
         setUser(userData);
         setIsAuthenticated(true);
-        // В реальном приложении здесь можно перенаправить пользователя на главную страницу
     };
 
     const logout = () => {
-        // При выходе удаляем токен из куки
         Cookies.remove('token');
         setUser(null);
         setIsAuthenticated(false);
-        // В реальном приложении здесь можно перенаправить пользователя на страницу логина
     };
 
     return (
@@ -61,5 +82,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 };
 
 export const useAuth = () => {
-    return useContext(AuthContext);
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 };

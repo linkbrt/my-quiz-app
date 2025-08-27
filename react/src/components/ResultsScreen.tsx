@@ -1,15 +1,16 @@
 import React from 'react';
 
-// Названия разделов, должны совпадать с server.js
-const SECTION_NAMES = [
-    "Основы алгоритмизации и программирования",
-    "ЭВМ  и периферийные устройства",
-    "Сети и телекоммуникации",
-    "Операционные системы",
-    "Базы данных"
-];
 
-function ResultsScreen({ username, score, totalQuestions, userAnswers, onRetakeMistakes, onPlayAgain }) {
+interface ResultsScreenProps {
+    username: string;
+    score: number;
+    totalQuestions: number;
+    userAnswers: any[];
+    onRetakeMistakes: () => void;
+    onPlayAgain: () => void;
+}
+
+function ResultsScreen({ username, score, totalQuestions, userAnswers, onRetakeMistakes, onPlayAgain }: ResultsScreenProps) {
     const incorrectAnswers = userAnswers.filter(answer => !answer.is_correct);
 
     // Можно использовать для отображения типа теста, если нужно

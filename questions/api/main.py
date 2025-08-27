@@ -1,7 +1,6 @@
 from fastapi import APIRouter
-from questions.api.v1 import questions, tests
+from questions.api.v1 import quizzes
 
 router = APIRouter()
 
-# router.include_router(questions.router, prefix="/questions", tags=["Questions"])
-# router.include_router(tests.router, prefix="/tests", tags=["Tests"])
+router.include_router(quizzes.router, prefix="/quizzes", tags=["quizzes"])
