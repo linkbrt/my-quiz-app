@@ -18,3 +18,11 @@ class UserModel(Base):
     is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
+
+class TokenModel(Base):
+    __tablename__ = "tokens"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    access_token = Column(String)
+    user_id = Column(UUID(as_uuid=True), index=True)

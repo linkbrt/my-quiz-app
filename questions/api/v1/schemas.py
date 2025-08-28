@@ -43,10 +43,14 @@ class QuestionSchema(BaseModel):
         orm_mode = True
 
 class UserQuizAttemptSchema(BaseModel):
-    # Добавь нужные поля по своей модели
     id: UUID
     user_id: UUID
     quiz_id: UUID
-    # ... другие поля ...
+    score: Decimal
+    started_at: datetime
+    completed_at: Optional[datetime]
+    created_at: datetime
+    updated_at: datetime
+
     class Config:
         orm_mode = True

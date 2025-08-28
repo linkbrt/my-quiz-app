@@ -12,6 +12,7 @@ import QuizAttemptPage from './pages/QuizAttemptPage';
 import UserAttemptsPage from './pages/UserAttemptsPage';
 import './styles/global.css';
 import LoginScreen from './components/auth/LoginScreen';
+import RegisterScreen from './components/auth/RegisterScreen';
 
 const App: FC = () => {
     return (
@@ -29,7 +30,7 @@ const App: FC = () => {
                             <Route path="/quiz/:quizId/take" element={<QuizAttemptPage />} /> 
                             <Route path="/my-attempts" element={<UserAttemptsPage />} />
                             <Route path="/login" element={<LoginScreen onLogin={() => {}} />} /> 
-                            <Route path="/register" element={<div>Страница регистрации</div>} /> 
+                            <Route path="/register" element={<RegisterScreen />} /> 
                             <Route path="/profile" element={<div>Страница профиля пользователя</div>} /> 
                             <Route path="*" element={<div>404: Страница не найдена</div>} />
                         </Routes>

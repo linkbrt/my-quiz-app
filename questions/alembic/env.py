@@ -5,8 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from infrastructure.db import Base  # Импорт 'Base' из вашего микросервиса 'questions'
-from domain.models import questions  # Импортируем модели, чтобы они были зарегистрированы в Base
+from questions.infrastructure.db import Base  # Импорт 'Base' из вашего микросервиса 'questions'
+from questions.domain.models import questions  # Импортируем модели, чтобы они были зарегистрированы в Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -6,15 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from auth.infrastructure.db import Base
 import jwt
 from auth.core.config import settings
-
-
-class TokenModel(Base):
-    __tablename__ = "tokens"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    access_token = Column(String)
-    user_id = Column(UUID(as_uuid=True), index=True)
-
+from auth.infrastructure.models import TokenModel
 
 class TokenRepository:
     def __init__(self, db: AsyncSession):
