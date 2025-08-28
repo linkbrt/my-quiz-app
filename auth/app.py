@@ -6,7 +6,7 @@ import sys # Для возможного sys.exit
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.main import router as api_v1_router
+from auth.api.main import router as api_v1_router
 
 
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +44,7 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     logger.info("FastAPI Auth service starting up...")
-    run_alembic_upgrade()
+    # run_alembic_upgrade()
 
 
 origins = [

@@ -15,6 +15,11 @@ class QuestionType(PyEnum):
     MULTIPLE_CHOICE = "multiple_choice"
     TEXT_INPUT = "text_input"
 
+
+class LanguageType(PyEnum):
+    PYTHON = "python"
+    CSHARP = "csharp"
+
 class Section(Base):
     __tablename__ = 'sections'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -37,6 +42,7 @@ class Quiz(Base):
     description = Column(Text)
     num_questions_to_show = Column(Integer, default=10, nullable=False)
     passing_score = Column(DECIMAL(5,2), default=0.70, nullable=False)
+    language_type = Column(sqlalchemy.Enum(LanguageType, name='language_type_enum', create_type=True), default=LanguageType.PYTHON, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     section = relationship("Section", back_populates="quizzes")

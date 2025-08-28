@@ -11,6 +11,18 @@ class ISectionRepository(ABC):
     async def get_by_id(self, section_id: UUID) -> Optional[Any]:
         pass
 
+    @abstractmethod
+    async def create(self, section_data: dict) -> Any:
+        pass
+
+    @abstractmethod
+    def update(self, section_id: UUID, section_data: dict) -> Optional[Any]:
+        pass
+
+    @abstractmethod
+    def delete(self, section_id: UUID) -> bool:
+        pass
+
 class IQuizRepository(ABC):
     @abstractmethod
     async def get_all(self) -> List[Any]:
@@ -22,6 +34,18 @@ class IQuizRepository(ABC):
 
     @abstractmethod
     async def get_by_section(self, section_id: UUID) -> List[Any]:
+        pass
+
+    @abstractmethod
+    async def create(self, quiz_data: dict) -> Any:
+        pass
+
+    @abstractmethod
+    def update(self, quiz_id: UUID, quiz_data: dict) -> Optional[Any]:
+        pass
+
+    @abstractmethod
+    def delete(self, quiz_id: UUID) -> bool:
         pass
 
 class IQuestionRepository(ABC):
@@ -37,6 +61,18 @@ class IQuestionRepository(ABC):
     async def get_by_quiz(self, quiz_id: UUID) -> List[Any]:
         pass
 
+    @abstractmethod
+    async def create(self, question_data: dict) -> Any:
+        pass
+
+    @abstractmethod
+    def update(self, question_id: UUID, question_data: dict) -> Optional[Any]:
+        pass
+
+    @abstractmethod
+    def delete(self, question_id: UUID) -> bool:
+        pass
+
 class IUserQuizAttemptRepository(ABC):
     @abstractmethod
     async def get_by_user(self, user_id: UUID) -> List[Any]:
@@ -44,4 +80,12 @@ class IUserQuizAttemptRepository(ABC):
 
     @abstractmethod
     async def create(self, attempt_data: dict) -> Any:
+        pass
+
+    @abstractmethod
+    def update(self, attempt_id: UUID, attempt_data: dict) -> Optional[Any]:
+        pass
+
+    @abstractmethod
+    def delete(self, attempt_id: UUID) -> bool:
         pass
