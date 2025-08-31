@@ -33,7 +33,7 @@ const QuizDetailsPage: FC = () => {
     }, [quizId]);
 
     const handleStartQuiz = async () => {
-        if (!isAuthenticated || !user?.id) {
+        if (!isAuthenticated || !user?.user_id) {
             alert("Вы должны быть авторизованы для начала квиза!");
             navigate('/login');
             return;

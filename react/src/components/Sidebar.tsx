@@ -12,9 +12,9 @@ const Sidebar: FC = () => {
                 <ul>
                     <li><NavLink to="/" end>Главная</NavLink></li>
                     <li><NavLink to="/sections">Разделы квизов</NavLink></li>
-                    <li><NavLink to="/my-attempts">Мои попытки</NavLink></li>
-                    <li><NavLink to="/settings">Настройки</NavLink></li>
-                    {user?.is_admin && <li><NavLink to="/admin">Администрирование</NavLink></li>}
+                    {isAuthenticated && <li><NavLink to="/my-attempts">Мои попытки</NavLink></li>}
+                    {isAuthenticated && <li><NavLink to="/settings">Настройки</NavLink></li>}
+                    {isAuthenticated && user?.is_admin && <li><NavLink to="/admin">Администрирование</NavLink></li>}
                 </ul>
             </nav>
         </aside>

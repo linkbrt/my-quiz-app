@@ -1,5 +1,5 @@
 // src/pages/HomePage.tsx
-import React, { FC } from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 

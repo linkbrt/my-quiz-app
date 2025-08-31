@@ -1,10 +1,11 @@
 // src/pages/QuizAttemptPage.tsx
-import React, { useEffect, useState, FC } from 'react';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { quizApi } from '../api/quizApi';
 import QuestionDisplay from '../components/QuestionDisplay';
 import { useAuth } from '../components/auth/AuthContext';
-import { Question, QuestionType } from '../types/api';
+import type { Question, QuestionType } from '../types/api';
 
 const QuizAttemptPage: FC = () => {
     const { quizId } = useParams<{ quizId: string }>();
@@ -18,7 +19,7 @@ const QuizAttemptPage: FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!isAuthenticated || !user?.id) {
+        if (!isAuthenticated || !user?.user_id) {
             alert("Для прохождения квиза необходимо авторизоваться.");
             navigate('/login');
             return;
@@ -38,7 +39,7 @@ const QuizAttemptPage: FC = () => {
             }
         }
         fetchQuizData();
-    }, [quizId, isAuthenticated, user?.id, navigate]);
+    }, [quizId, isAuthenticated, user?.user_id, navigate]);
 
     const handleAnswerChange = (questionId: string, value: string | string[]) => {
         setUserAnswers(prev => ({ ...prev, [questionId]: value }));

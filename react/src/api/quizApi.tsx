@@ -6,6 +6,7 @@ const API_BASE_URL = 'http://localhost:8001/api/v1'; // Замените на а
 
 interface FetchOptions extends RequestInit {
     headers?: Record<string, string>;
+    method?: string;
 }
 
 async function fetchWithAuth<T>(url: string, options: FetchOptions = {}): Promise<T> {
@@ -40,6 +41,10 @@ async function fetchWithAuth<T>(url: string, options: FetchOptions = {}): Promis
 export const quizApi = {
     getSections: (): Promise<Section[]> => fetchWithAuth<Section[]>('/sections/'),
     getSectionById: (sectionId: string): Promise<Section> => fetchWithAuth<Section>(`/sections/${sectionId}`),
+    createSection: (data: SectionCreate): Promise<Section> => fetchWithAuth<Section>('/sections/', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
 
     getAllQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/'), 
     

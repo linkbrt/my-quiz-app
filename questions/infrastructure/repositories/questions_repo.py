@@ -19,7 +19,9 @@ class SectionRepository(ISectionRepository):
         return result.scalar_one_or_none()
     
     async def create(self, section_data: dict) -> Section:
+        print(section_data)
         section = Section(**section_data)
+        
         self.db.add(section)
         await self.db.commit()
         await self.db.refresh(section)

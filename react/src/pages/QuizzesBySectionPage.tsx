@@ -14,7 +14,7 @@ const QuizzesBySectionPage: FC = () => {
 
     useEffect(() => {
         async function fetchData() {
-            if (!sectionId) return; // Проверка на случай, если sectionId undefined
+            if (!sectionId) return;
 
             try {
                 const sectionData = await quizApi.getSectionById(sectionId);
