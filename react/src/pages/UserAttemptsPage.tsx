@@ -1,9 +1,9 @@
 // src/pages/UserAttemptsPage.tsx
-import React, { useEffect, useState, FC } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { quizApi } from '../api/quizApi';
 import { useAuth } from '../components/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { UserQuizAttempt } from '../types/api';
+import type { UserQuizAttempt } from '../types/api';
 
 const UserAttemptsPage: FC = () => {
     const { isAuthenticated, user } = useAuth();

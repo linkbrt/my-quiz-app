@@ -5,7 +5,7 @@ import '../styles/sidebar.css';
 import { useAuth } from './auth/AuthContext';
 
 const Sidebar: FC = () => {
-    const { isAuthenticated, user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     return (
         <aside className="app-sidebar">
             <nav>

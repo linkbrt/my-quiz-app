@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     GIGACHAT_ACCESS_KEY: str
     GIGACHAT_ACCESS_KEY_EXPIRED_AT: str
     DATABASE_URL: str
-    SECRET_KEY: str
     ALGORITHM: str
     JWT_SECRET_KEY: str
 

@@ -1,12 +1,12 @@
 // src/components/AuthContext.tsx
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import type { ReactNode } from 'react';
 import Cookies from 'js-cookie';
 
 interface User {
-    id: string; // UUID пользователя, должен приходить из сервиса аутентификации
+    user_id: string;
     username: string;
-    is_admin?: boolean;
-    // ... любые другие данные пользователя, которые вы хотите хранить
+    is_admin: boolean;
 }
 
 interface AuthContextType {
@@ -31,13 +31,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const token = Cookies.get('token');
             if (token) {
                 try {
-                    const response = await fetch('http://localhost:8000/api/v1/obtain_token', { // Замените на ваш URL
+                    const response = await fetch('http://localhost:8000/api/v1/users/me/', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
                     if (response.ok) {
                         const userData = await response.json();
+                        console.log("Данные пользователя:", userData);
                         setUser(userData);
                         setIsAuthenticated(true);
                     } else {
@@ -51,12 +52,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setUser(null);
                     setIsAuthenticated(false);
                 }
-                const dummyUserId = "123e4567-e89b-12d3-a456-426614174000"; // Пример UUID
-                const dummyUsername = "Иван Петров"; 
-                setUser({ id: dummyUserId, username: dummyUsername });
-                setIsAuthenticated(true);
-                setUser(null);
-                setIsAuthenticated(false);
             }
         };
         fetchData();

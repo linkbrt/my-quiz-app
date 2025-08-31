@@ -12,10 +12,15 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: UUID4
     is_active: bool
+    is_admin: bool
 
     class Config:
         from_attributes = True
 
+class UserInfo(BaseModel):
+    user_id: UUID4
+    is_admin: bool
+    username: str
 
 class Token(BaseModel):
     access_token: str

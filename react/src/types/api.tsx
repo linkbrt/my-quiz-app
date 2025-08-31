@@ -51,14 +51,14 @@ export interface Question {
 
 // Соответствует UserQuizAttemptSchema
 export interface UserQuizAttempt {
-    id: string; // UUID как строка
-    user_id: string; // UUID как строка
-    quiz_id: string; // UUID как строка
+    id: string;
+    user_id: string;
+    quiz_id: string;
     score: number | null;
     is_passed: boolean | null;
     attempt_number: number;
-    started_at: string; // ISO 8601 string
-    finished_at: string | null; // ISO 8601 string
+    started_at: string;
+    finished_at: string | null;s
 }
 
 // Если у вас будут схемы для запросов/ответов, например:

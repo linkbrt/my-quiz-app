@@ -2,7 +2,7 @@
 import Cookies from 'js-cookie';
 import type { Question, Section, Quiz, UserQuizAttempt, SubmitAnswerRequest } from '../types/api';
 
-const API_BASE_URL = 'http://localhost:8001/api/v1/quizzes'; // Замените на адрес вашего FastAPI микросервиса
+const API_BASE_URL = 'http://localhost:8001/api/v1'; // Замените на адрес вашего FastAPI микросервиса
 
 interface FetchOptions extends RequestInit {
     headers?: Record<string, string>;
@@ -38,12 +38,9 @@ async function fetchWithAuth<T>(url: string, options: FetchOptions = {}): Promis
 }
 
 export const quizApi = {
-    getSections: (): Promise<Section[]> => fetchWithAuth<Section[]>('/sections'),
+    getSections: (): Promise<Section[]> => fetchWithAuth<Section[]>('/sections/'),
     getSectionById: (sectionId: string): Promise<Section> => fetchWithAuth<Section>(`/sections/${sectionId}`),
-    
-    // В вашем роутере есть list_quizzes, который без префикса. 
-    // Если FastAPI роутер подключен с prefix="/api/v1", то это будет /api/v1/
-    // Исходя из вашего `router = APIRouter()`, предполагаю, что это корень или просто `/`
+
     getAllQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/'), 
     
     getQuizById: (quizId: string): Promise<Quiz> => fetchWithAuth<Quiz>(`/${quizId}`),

@@ -1,6 +1,5 @@
-import React from 'react';
-import { useAuth } from '../components/auth/AuthContext.tsx'; // Импортируем хук для доступа к контексту
-import '../styles/header.css'; // Подключаем стили для шапки
+import { useAuth } from '../components/auth/AuthContext.tsx';
+import '../styles/header.css';
 
 function Header() {
     const { user, isAuthenticated, logout } = useAuth();
@@ -9,7 +8,7 @@ function Header() {
         <header className="app-header">
             <div className="app-layout">
                 <div className="header-logo">
-                    <a href="/">DevSkill Hub</a> {/* Логотип или название сайта */}
+                    <a href="/">DevSkill Hub</a>
                 </div>
                 <nav className="header-nav">
                     {isAuthenticated ? (

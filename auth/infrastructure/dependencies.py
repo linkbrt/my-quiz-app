@@ -22,7 +22,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=["HS256"])
         user_id = payload.get("user_id")
-        
+
         if user_id is None:
             raise credentials_exception
         
@@ -34,4 +34,3 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         "is_admin": payload.get("is_admin"),
     }
     return user
-
