@@ -47,9 +47,14 @@ export const quizApi = {
     }),
 
     getAllQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/'), 
-    
-    getQuizById: (quizId: string): Promise<Quiz> => fetchWithAuth<Quiz>(`/${quizId}`),
-    getQuizzesBySection: (sectionId: string): Promise<Quiz[]> => fetchWithAuth<Quiz[]>(`/section/${sectionId}`),
+    getQuizzesBySection: (sectionId: string): Promise<Quiz[]> => fetchWithAuth<Quiz[]>(`/sections/${sectionId}/`),
+
+    getQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/quizzes/'),
+    getQuizById: (quizId: string): Promise<Quiz> => fetchWithAuth<Quiz>(`/quizzes/${quizId}`),
+    createQuiz: (data: QuizCreate): Promise<Quiz> => fetchWithAuth<Quiz>('/quizzes/', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
     
     // Путь уточнен согласно вашему последнему роутеру, но если префикс используется, поправьте.
     getQuestionsByQuiz: (quizId: string): Promise<Question[]> => fetchWithAuth<Question[]>(`/${quizId}/questions`), 

@@ -2,7 +2,7 @@
 import React, { useState, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { quizApi } from '../api/quizApi';
-import { SectionCreate } from '../types/api';
+import type { Section, SectionCreate } from '../types/api';
 import { IsAdminCheck } from '../components/IsAdminCheck'; // Убедитесь, что путь правильный
 import '../styles/global.css'; // Для стилей форм
 
@@ -35,8 +35,8 @@ const AdminCreateSectionPage: FC = () => {
             console.log("Отправляемые данные sectionData:", sectionData);
             const newSection = await quizApi.createSection(sectionData);
             setSuccess(`Раздел "${newSection.title}" успешно создан!`);
-            setSectionData({ title: '', description: '', order_index: 0, is_published: false }); // Очистить форму
-            navigate(`/sections/${newSection.id}/quizzes`); // Перейти к квизам нового раздела
+            setSectionData({title: '', description: '', order_index: 0, is_published: false });
+            navigate(`/sections/${newSection.id}/quizzes`);
         } catch (err: any) {
             setError(err.message);
         } finally {

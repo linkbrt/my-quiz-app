@@ -1,5 +1,5 @@
 // src/pages/AdminDashboardPage.tsx (Обновлен)
-import React, { FC } from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { IsAdminCheck } from '../components/IsAdminCheck';
 
@@ -17,7 +17,6 @@ const AdminDashboardPage: FC = () => {
                         <li style={{ marginBottom: '15px' }}>
                             <Link to="/admin/quizzes/create-and-import" className="button">Создать квиз и импортировать вопросы</Link> {/* <<< НОВАЯ ССЫЛКА */}
                         </li>
-                        {/* Вы можете удалить ссылки на старые страницы AdminCreateQuizPage и AdminImportQuestionsPage, если они вам больше не нужны */}
                     </ul>
                 </nav>
             </div>

@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import List, Optional
 from questions.domain.repositories import ISectionRepository, IQuizRepository, IQuestionRepository, IUserQuizAttemptRepository
-from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt
+from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt, Answer
 
 class QuizService:
     def __init__(
@@ -9,6 +9,7 @@ class QuizService:
         section_repo: ISectionRepository,
         quiz_repo: IQuizRepository,
         question_repo: IQuestionRepository,
+        answer_repo,
         attempt_repo: IUserQuizAttemptRepository,
     ):
         self.section_repo = section_repo
@@ -25,14 +26,17 @@ class QuizService:
     async def create_section(self, section_data: dict) -> Section:
         return await self.section_repo.create(section_data)
     
-    def update_section(self, section_id: UUID, section_data: dict) -> Optional[Section]:
-        return self.section_repo.update(section_id, section_data)
+    async def update_section(self, section_id: UUID, section_data: dict) -> Optional[Section]:
+        return await self.section_repo.update(section_id, section_data)
     
-    def delete_section(self, section_id: UUID) -> bool:
-        return self.section_repo.delete(section_id)
+    async def delete_section(self, section_id: UUID) -> bool:
+        return await self.section_repo.delete(section_id)
 
     async def list_quizzes(self) -> List[Quiz]:
         return await self.quiz_repo.get_all()
+    
+    async def import_from_json(self, content: dict, section_id: str):
+        return await self.section_repo.import_from_json(content, section_id)
 
     async def get_quiz(self, quiz_id: UUID) -> Optional[Quiz]:
         return await self.quiz_repo.get_by_id(quiz_id)
@@ -78,3 +82,16 @@ class QuizService:
     
     async def delete_user_attempt(self, attempt_id: UUID) -> bool:
         return await self.attempt_repo.delete(attempt_id)
+    
+    async def get_answer(self, answer_id: UUID) -> Optional[Answer]:
+        return await self.answer_repo.get_by_id(answer_id)
+    
+    async def create_answer(self, answer_data: dict) -> Quiz:
+        return await self.answer_repo.create(answer_data)
+    
+    async def update_answer(self, answer_id: UUID, answer_data: dict) -> Optional[Quiz]:
+        return await self.answer_repo.update(answer_id, answer_data)
+    
+    async def delete_quiz(self, quiz_id: UUID) -> bool:
+        return await self.quiz_repo.delete(quiz_id)
+

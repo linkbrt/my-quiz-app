@@ -22,6 +22,13 @@ export interface Section {
     is_published: boolean;
 }
 
+export interface SectionCreate {
+    title: string;
+    description: string | null;
+    order_index: number;
+    is_published: boolean;
+}
+
 // Соответствует QuizSchema
 export interface Quiz {
     id: string; // UUID как строка
@@ -58,7 +65,7 @@ export interface UserQuizAttempt {
     is_passed: boolean | null;
     attempt_number: number;
     started_at: string;
-    finished_at: string | null;s
+    finished_at: string | null;
 }
 
 // Если у вас будут схемы для запросов/ответов, например:

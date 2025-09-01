@@ -16,6 +16,12 @@ class SectionSchema(BaseModel):
     class Config:
         orm_mode = True
 
+class SectionFilter(BaseModel):
+    title: str
+    description: str
+    is_published: bool = False
+    quiz: UUID
+
 class QuizSchema(BaseModel):
     id: UUID
     section_id: UUID
