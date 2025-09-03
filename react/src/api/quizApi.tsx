@@ -1,6 +1,6 @@
 // src/api/quizApi.ts
 import Cookies from 'js-cookie';
-import type { Question, Section, Quiz, UserQuizAttempt, SubmitAnswerRequest } from '../types/api';
+import type { Question, Section, Quiz, UserQuizAttempt, SubmitAnswerRequest, SectionFullInfo, SectionCreate, QuestionAnswerBlock, QuizFullInfo } from '../types/api';
 
 const API_BASE_URL = 'http://localhost:8001/api/v1'; // Замените на адрес вашего FastAPI микросервиса
 
@@ -40,28 +40,28 @@ async function fetchWithAuth<T>(url: string, options: FetchOptions = {}): Promis
 
 export const quizApi = {
     getSections: (): Promise<Section[]> => fetchWithAuth<Section[]>('/sections/'),
-    getSectionById: (sectionId: string): Promise<Section> => fetchWithAuth<Section>(`/sections/${sectionId}`),
+    getSectionById: (sectionId: string): Promise<SectionFullInfo> => fetchWithAuth<SectionFullInfo>(`/sections/${sectionId}`),
     createSection: (data: SectionCreate): Promise<Section> => fetchWithAuth<Section>('/sections/', {
         method: 'POST',
         body: JSON.stringify(data),
     }),
 
-    getAllQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/'), 
-    getQuizzesBySection: (sectionId: string): Promise<Quiz[]> => fetchWithAuth<Quiz[]>(`/sections/${sectionId}/`),
+    getQuizzesBySection: (sectionId: string): Promise<Quiz[]> => fetchWithAuth<Quiz[]>(`/sections/${sectionId}`),
 
     getQuizzes: (): Promise<Quiz[]> => fetchWithAuth<Quiz[]>('/quizzes/'),
-    getQuizById: (quizId: string): Promise<Quiz> => fetchWithAuth<Quiz>(`/quizzes/${quizId}`),
+    getQuizById: (quizId: string): Promise<QuizFullInfo> => fetchWithAuth<QuizFullInfo>(`/quizzes/${quizId}`),
     createQuiz: (data: QuizCreate): Promise<Quiz> => fetchWithAuth<Quiz>('/quizzes/', {
         method: 'POST',
         body: JSON.stringify(data),
     }),
     
-    // Путь уточнен согласно вашему последнему роутеру, но если префикс используется, поправьте.
-    getQuestionsByQuiz: (quizId: string): Promise<Question[]> => fetchWithAuth<Question[]>(`/${quizId}/questions`), 
-    
     getQuestionById: (questionId: string): Promise<Question> => fetchWithAuth<Question>(`/questions/${questionId}`),
     getUserAttempts: (userId: string): Promise<UserQuizAttempt[]> => fetchWithAuth<UserQuizAttempt[]>(`/user/${userId}/attempts`),
     
+    importQuestionsToQuiz: (quiz_id: string,data: QuestionAnswerBlock[]): Promise<boolean> => fetchWithAuth<boolean>(`/questions/import_from_json`, {
+        method: 'POST',
+        body: JSON.stringify({quiz_id, questions: data}),
+    }),
     // Заглушки для интерактивных эндпоинтов, если они появятся:
     // startQuiz: (quizId: string, userId: string): Promise<UserQuizAttempt> => fetchWithAuth<UserQuizAttempt>(`/${quizId}/start`, {
     //     method: 'POST',

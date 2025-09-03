@@ -32,6 +32,9 @@ class UserService:
             return user
         return None
     
+    # async def patch_user(self, user_data: User):
+    #     return None
+    
     async def delete_user(self, user_id: str):
         """Удалить пользователя по ID."""
         user = await self.user_repo.get_by_id(user_id)

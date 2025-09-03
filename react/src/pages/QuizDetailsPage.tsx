@@ -20,9 +20,8 @@ const QuizDetailsPage: FC = () => {
 
             try {
                 const quizData = await quizApi.getQuizById(quizId);
-                setQuiz(quizData);
-                const questionsData = await quizApi.getQuestionsByQuiz(quizId);
-                setQuestions(questionsData);
+                setQuiz(quizData.quiz);
+                setQuestions(quizData.questions);
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -66,7 +65,7 @@ const QuizDetailsPage: FC = () => {
                     {questions.map((question, index) => (
                         <div key={question.id} className="question-item-overview">
                             <h3>Вопрос {index + 1}</h3>
-                            <p>{question.question_text[0]?.value || 'Содержимое вопроса...'}</p>
+                            <p>{question.question_text || 'Содержимое вопроса...'}</p>
                         </div>
                     ))}
                 </div>

@@ -16,6 +16,10 @@ class SectionSchema(BaseModel):
     class Config:
         orm_mode = True
 
+class GetSectionInfoSchema(BaseModel):
+    section: SectionSchema
+    quizzes: List["QuizSchema"]
+
 class SectionFilter(BaseModel):
     title: str
     description: str
@@ -35,26 +39,18 @@ class QuizSchema(BaseModel):
     class Config:
         orm_mode = True
 
+class QuizFullSchema(BaseModel):
+    quiz: QuizSchema
+    questions: List["QuestionSchema"]
+
 class QuestionSchema(BaseModel):
     id: UUID
     quiz_id: UUID
-    question_text: Dict[str, Any]
+    question_text: str
     question_type: str
     explanation: Optional[str]
     order_index: int
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
-
-class UserQuizAttemptSchema(BaseModel):
-    id: UUID
-    user_id: UUID
-    quiz_id: UUID
-    score: Decimal
-    started_at: datetime
-    completed_at: Optional[datetime]
+    answers: list
     created_at: datetime
     updated_at: datetime
 

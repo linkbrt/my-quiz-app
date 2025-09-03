@@ -65,6 +65,10 @@ input {
     box-sizing: border-box;
 }
 
+input[type=radio] {
+    width: auto;
+}
+
 .mode-selection {
     margin-bottom: 30px;
     text-align: center;

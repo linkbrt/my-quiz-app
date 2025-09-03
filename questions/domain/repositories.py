@@ -72,20 +72,3 @@ class IQuestionRepository(ABC):
     @abstractmethod
     def delete(self, question_id: UUID) -> bool:
         pass
-
-class IUserQuizAttemptRepository(ABC):
-    @abstractmethod
-    async def get_by_user(self, user_id: UUID) -> List[Any]:
-        pass
-
-    @abstractmethod
-    async def create(self, attempt_data: dict) -> Any:
-        pass
-
-    @abstractmethod
-    def update(self, attempt_id: UUID, attempt_data: dict) -> Optional[Any]:
-        pass
-
-    @abstractmethod
-    def delete(self, attempt_id: UUID) -> bool:
-        pass

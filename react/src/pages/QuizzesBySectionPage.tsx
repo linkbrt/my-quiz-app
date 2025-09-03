@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { quizApi } from '../api/quizApi';
-import type { Section, Quiz } from '../types/api';
+import type { Section, Quiz, SectionFullInfo } from '../types/api';
 
 const QuizzesBySectionPage: FC = () => {
     const { sectionId } = useParams<{ sectionId: string }>();
@@ -18,9 +18,8 @@ const QuizzesBySectionPage: FC = () => {
 
             try {
                 const sectionData = await quizApi.getSectionById(sectionId);
-                setSection(sectionData);
-                const quizzesData = await quizApi.getQuizzesBySection(sectionId);
-                setQuizzes(quizzesData);
+                setSection(sectionData.section);
+                setQuizzes(sectionData.quizzes);
             } catch (err: any) {
                 setError(err.message);
             } finally {

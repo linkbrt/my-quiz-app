@@ -4,7 +4,7 @@ import type { QuestionContentBlock } from '../types/api';
 import React from 'react';
 
 interface QuestionDisplayProps {
-    questionContent: QuestionContentBlock[];
+    questionContent: string;
 }
 
 const QuestionDisplay: FC<QuestionDisplayProps> = ({ questionContent }) => {

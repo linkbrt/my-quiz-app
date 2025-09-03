@@ -10,7 +10,6 @@ from questions.infrastructure.repositories.questions_repo import (
     SectionRepository,
     QuizRepository,
     QuestionRepository,
-    UserQuizAttemptRepository,
 )
 from questions.infrastructure.db import get_db
 from questions.api.v1.schemas import (
@@ -40,13 +39,14 @@ def get_quiz_service(db: AsyncSession = Depends(get_db)) -> QuizService:
     section_repo = SectionRepository(db)
     quiz_repo = QuizRepository(db)
     question_repo = QuestionRepository(db)
-    attempt_repo = UserQuizAttemptRepository(db)
-    return QuizService(section_repo, quiz_repo, question_repo, attempt_repo)
+    return QuizService(section_repo, quiz_repo, question_repo)
 
 
 @router.get("/", response_model=list[QuestionSchema])
 async def list_questions(service: QuizService = Depends(get_quiz_service)):
-    return await service.list_questions()
+    questions = await service.list_questions()
+    print(questions)
+    return questions
 
 @router.get("/quiz/{quiz_id}", response_model=list[QuestionSchema])
 async def list_questions_by_quiz(quiz_id: UUID, service: QuizService = Depends(get_quiz_service)):
@@ -66,6 +66,30 @@ async def create_question(
     current_user: Annotated[dict, Depends(get_current_user)] = None,
 ):
     return await service.create_question(question_data + current_user)
+
+
+@router.post("/import_from_json", status_code=status.HTTP_201_CREATED)
+async def create_questions_from_json(
+    questions_data: dict, 
+    service: QuizService = Depends(get_quiz_service),
+    current_user: Annotated[dict, Depends(get_current_user)] = None,
+):
+    db_questions = await service.list_questions()
+    order_index = 0
+    for db_question in db_questions:
+        if db_question.order_index >= order_index:
+            order_index = db_question.order_index
+
+    for i, question in enumerate(questions_data['questions']):
+        print(question.get('question_text'))
+        await service.create_question({
+            "quiz_id": questions_data['quiz_id'],
+            "question_text": question.get('question_text'),
+            "answers": question.get('answers'),
+            "order_index": i + order_index + 1,
+        })
+    # return await service.create_question(question_data + current_user)
+    return True
 
 @router.put("/{question_id}", response_model=QuestionSchema)
 async def update_question(question_id: UUID, question_data: dict, service: QuizService = Depends(get_quiz_service)):

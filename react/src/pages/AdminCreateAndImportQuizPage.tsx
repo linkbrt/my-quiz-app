@@ -42,7 +42,7 @@ const AdminCreateAndImportQuizPage: FC = () => {
                     setNewQuizData(prev => ({ ...prev, section_id: fetchedSections[0].id }));
                 }
 
-                const fetchedQuizzes = await quizApi.getAllQuizzes();
+                const fetchedQuizzes = await quizApi.getQuizzes();
                 setAllQuizzes(fetchedQuizzes);
                 if (fetchedQuizzes.length > 0) {
                     setSelectedQuizIdForImport(fetchedQuizzes[0].id);

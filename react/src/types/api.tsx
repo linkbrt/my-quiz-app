@@ -13,13 +13,23 @@ export interface QuestionContentBlock {
     level?: number; // Для блоков типа 'heading' (например, 2 для h2)
 }
 
-// Соответствует SectionSchema
+export interface QuestionAnswerBlock {
+    text: string;
+    is_correct: string;
+}
+
+
 export interface Section {
     id: string; // UUID как строка
     title: string;
     description: string | null;
     order_index: number;
     is_published: boolean;
+}
+
+export interface SectionFullInfo {
+    section: Section,
+    quizzes: Quiz[];
 }
 
 export interface SectionCreate {
@@ -39,38 +49,18 @@ export interface Quiz {
     passing_score: number;
 }
 
-// Соответствует AnswerSchema (если вы вынесете его)
-export interface Answer {
-    id: string; // UUID как строка
-    answer_text: string;
-    is_correct?: boolean; // Возможно, не будет в схеме для клиента
+export interface QuizFullInfo {
+    quiz: Quiz,
+    questions: Question[],
 }
+
 
 // Соответствует QuestionSchema
 export interface Question {
     id: string; // UUID как строка
     quiz_id: string; // UUID как строка
-    question_text: QuestionContentBlock[]; // JSONB
+    question_text: string; // JSONB
     question_type: QuestionType;
     order_index: number;
-    answers: Answer[]; // Если вопросы сразу приходят с вариантами ответов
-}
-
-// Соответствует UserQuizAttemptSchema
-export interface UserQuizAttempt {
-    id: string;
-    user_id: string;
-    quiz_id: string;
-    score: number | null;
-    is_passed: boolean | null;
-    attempt_number: number;
-    started_at: string;
-    finished_at: string | null;
-}
-
-// Если у вас будут схемы для запросов/ответов, например:
-export interface SubmitAnswerRequest {
-    question_id: string;
-    chosen_answer_ids?: string[]; // Для single_choice/multiple_choice
-    user_text_answer?: string; // Для text_input
+    answers: QuestionAnswerBlock[];
 }

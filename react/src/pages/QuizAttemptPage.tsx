@@ -1,11 +1,11 @@
 // src/pages/QuizAttemptPage.tsx
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
+import type { FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { quizApi } from '../api/quizApi';
 import QuestionDisplay from '../components/QuestionDisplay';
 import { useAuth } from '../components/auth/AuthContext';
-import type { Question, QuestionType } from '../types/api';
+import { QuestionType, type Question } from '../types/api';
 
 const QuizAttemptPage: FC = () => {
     const { quizId } = useParams<{ quizId: string }>();
@@ -30,8 +30,8 @@ const QuizAttemptPage: FC = () => {
             try {
                 // Здесь в идеале должен быть вызов startQuiz и получение initial questions
                 // Но так как у нас нет такого эндпоинта, просто получаем вопросы для квиза.
-                const fetchedQuestions = await quizApi.getQuestionsByQuiz(quizId);
-                setQuestions(fetchedQuestions);
+                const fetchedQuestions = await quizApi.getQuizById(quizId);
+                setQuestions(fetchedQuestions.questions);
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -91,14 +91,15 @@ const QuizAttemptPage: FC = () => {
                 {question.question_type === QuestionType.SINGLE_CHOICE && (
                     question.answers.map(answer => (
                         <label key={answer.id} style={{ display: 'block', marginBottom: '10px' }}>
+                            
                             <input
                                 type="radio"
                                 name={`question_${question.id}`}
-                                value={answer.id}
-                                checked={userAnswers[question.id] === answer.id}
-                                onChange={() => handleAnswerChange(question.id, answer.id)}
+                                value={answer.text}
+                                
+                                onChange={() => handleAnswerChange(question.id, answer.text)}
                             />
-                            {answer.answer_text}
+                            {answer.text}
                         </label>
                     ))
                 )}

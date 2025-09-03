@@ -8,11 +8,9 @@ from questions.infrastructure.repositories.questions_repo import (
     SectionRepository,
     QuizRepository,
     QuestionRepository,
-    AnswerRepository,
-    UserQuizAttemptRepository,
 )
 from questions.infrastructure.db import get_db
-from questions.api.v1.schemas import SectionFilter, SectionSchema
+from questions.api.v1.schemas import QuizSchema, SectionFilter, SectionSchema, GetSectionInfoSchema
 
 router = APIRouter()
 
@@ -20,20 +18,20 @@ def get_quiz_service(db: AsyncSession = Depends(get_db)) -> QuizService:
     section_repo = SectionRepository(db)
     quiz_repo = QuizRepository(db)
     question_repo = QuestionRepository(db)
-    answer_repo = AnswerRepository(db)
-    attempt_repo = UserQuizAttemptRepository(db)
-    return QuizService(section_repo, quiz_repo, question_repo, answer_repo, attempt_repo)
+    return QuizService(section_repo, quiz_repo, question_repo)
 
 @router.get("/", response_model=List[SectionSchema])
 async def list_sections(service: QuizService = Depends(get_quiz_service)):
     return await service.list_sections()
 
-@router.get("/{section_id}", response_model=SectionSchema)
+@router.get("/{section_id}", response_model=GetSectionInfoSchema)
 async def get_section(section_id: UUID, service: QuizService = Depends(get_quiz_service)):
     section = await service.get_section(section_id)
+    quizzes = await service.list_quizzes_by_section(section_id)
     if not section:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
-    return section
+
+    return {"section": section, "quizzes": quizzes}
 
 @router.post("/", response_model=SectionSchema, status_code=status.HTTP_201_CREATED)
 async def create_section(section_data: dict, service: QuizService = Depends(get_quiz_service)):

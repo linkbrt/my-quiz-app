@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
 
-from questions.domain.models.questions import Section, Quiz, Question, UserQuizAttempt, Answer
-from questions.domain.repositories import ISectionRepository, IQuizRepository, IQuestionRepository, IUserQuizAttemptRepository
+from questions.domain.models.questions import Section, Quiz, Question
+from questions.domain.repositories import ISectionRepository, IQuizRepository, IQuestionRepository
 
 class SectionRepository(ISectionRepository):
     def __init__(self, db: AsyncSession):
@@ -127,77 +127,5 @@ class QuestionRepository(IQuestionRepository):
         if not question:
             return False
         await self.db.delete(question)
-        await self.db.commit()
-        return True
-    
-class AnswerRepository():
-    def __init__(self, db: AsyncSession):
-        self.db = db
-
-    async def get_all(self) -> List[Answer]:
-        result = await self.db.execute(select(Answer))
-        return result.scalars().all()
-
-    async def get_by_id(self, answer_id: uuid.UUID) -> Optional[Answer]:
-        result = await self.db.execute(select(Answer).where(Answer.id == answer_id))
-        return result.scalar_one_or_none()
-    
-    async def create(self, answer_data: dict) -> Answer:
-        answer = Answer(**answer_data)
-        self.db.add(answer)
-        await self.db.commit()
-        await self.db.refresh(answer)
-        return answer
-    
-    async def update(self, question_id: uuid.UUID, question_data: dict) -> Optional[Question]:
-        question = await self.get_by_id(question_id)
-        if not question:
-            return None
-        for key, value in question_data.items():
-            setattr(question, key, value)
-        await self.db.add(question)
-        await self.db.commit()
-        await self.db.refresh(question)
-        return question
-    
-    async def delete(self, question_id: uuid.UUID) -> bool:
-        question = await self.db.get(Question, question_id)
-        if not question:
-            return False
-        await self.db.delete(question)
-        await self.db.commit()
-        return True
-
-class UserQuizAttemptRepository(IUserQuizAttemptRepository):
-    def __init__(self, db: AsyncSession):
-        self.db = db
-
-    async def get_by_user(self, user_id: uuid.UUID) -> List[UserQuizAttempt]:
-        result = await self.db.execute(select(UserQuizAttempt).where(UserQuizAttempt.user_id == user_id))
-        return result.scalars().all()
-
-    async def create(self, attempt_data: dict) -> UserQuizAttempt:
-        attempt = UserQuizAttempt(**attempt_data)
-        self.db.add(attempt)
-        await self.db.commit()
-        await self.db.refresh(attempt)
-        return attempt
-    
-    async def update(self, attempt_id: uuid.UUID, attempt_data: dict) -> Optional[UserQuizAttempt]:
-        attempt = await self.db.get(UserQuizAttempt, attempt_id)
-        if not attempt:
-            return None
-        for key, value in attempt_data.items():
-            setattr(attempt, key, value)
-        await self.db.add(attempt)
-        await self.db.commit()
-        await self.db.refresh(attempt)
-        return attempt
-    
-    async def delete(self, attempt_id: uuid.UUID) -> bool:
-        attempt = await self.db.get(UserQuizAttempt, attempt_id)
-        if not attempt:
-            return False
-        await self.db.delete(attempt)
         await self.db.commit()
         return True
